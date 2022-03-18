@@ -309,7 +309,7 @@ async def check_discounts():
 
 
 @client.slash_command(description="Check live information for every bond type issued by KlimaDAO.")
-async def bonds(ctx):
+async def bonds(ctx: discord.ApplicationContext):
     global klima_price_usd, rebase, staking_rewards, bond_info
 
     info = []
@@ -351,12 +351,12 @@ async def bonds(ctx):
         await ctx.followup.send(embed=paginationList[0])
     else:
         view = Pagination(paginationList=paginationList)
-        await ctx.respond(embed=paginationList[view.value], view=view)
+        await ctx.respond(embed=paginationList[view.value], view=view, ephemeral=True)
         view.message = await ctx.interaction.original_message()
 
 
 @client.slash_command(description="Check the available bond types that KlimaDAO offers and that this bot supports.")
-async def info_bonds(ctx):
+async def info_bonds(ctx: discord.ApplicationContext):
     if not check_discounts.is_running():
         check_discounts.start()
 
@@ -425,7 +425,7 @@ async def delete_alert(
 
 
 @client.slash_command(description='Delete all the previously configured bond alerts.')
-async def delete_all(ctx):
+async def delete_all(ctx: discord.ApplicationContext):
     alert_list = search_alert(alert_db, search_user=str(ctx.author.id))
     if len(alert_list) > 0:
         check = 0
@@ -446,7 +446,7 @@ async def delete_all(ctx):
 
 
 @client.slash_command(description='Check all the already existing alerts.')
-async def my_alerts(ctx):
+async def my_alerts(ctx: discord.ApplicationContext):
     alert_list = search_alert(alert_db, search_user=str(ctx.author.id))
     if len(alert_list) > 0:
         embed = discord.Embed(title="Configured Alerts", description=f'{ctx.author.mention} currently has the following alerts configured.', colour=0xFFFFFF)  # noqa: E501
@@ -462,7 +462,7 @@ async def my_alerts(ctx):
 
 
 @client.slash_command(description="Check all the commands and a brief explanation on how to use them.")
-async def help_bonds(ctx):
+async def help_bonds(ctx: discord.ApplicationContext):
     embed = discord.Embed(title='Help Panel', description='Here you can see a list with all the KlimaDAO Alerts commands and a brief explanation on how to use them.', colour=0xFFFFFF)  # noqa: E501
     embed.add_field(name=':small_blue_diamond: /info_bonds', value='Returns a list with the names of the partners, the bond types and the payout tokens that KlimaDAO offers.', inline=False)  # noqa: E501
     embed.add_field(name=':small_blue_diamond: /bonds', value='Returns all the live information for every bond type issued by KlimaDAO.', inline=False)  # noqa: E501
